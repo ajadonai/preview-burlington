@@ -83,6 +83,24 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white
 
 .dot-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
 .content{position:relative;z-index:1}
+.submit-section{margin-top:40px;padding-top:40px}
+.submit-divider{height:1px;background:var(--border);margin-bottom:32px}
+.submit-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--off-white);margin-bottom:8px}
+.submit-desc{font-size:14px;color:var(--gray-400);line-height:1.6;margin-bottom:24px}
+.submit-optional{margin-bottom:24px}
+.submit-optional label{display:block;font-size:12.5px;font-weight:500;color:var(--gray-400);margin-bottom:8px}
+.submit-optional textarea{width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border-2);border-radius:10px;color:var(--off-white);font-family:'Inter',sans-serif;font-size:14px;min-height:80px;resize:vertical;outline:none;transition:border-color .25s}
+.submit-optional textarea:focus{border-color:rgba(13,148,136,.5)}
+.submit-optional textarea::placeholder{color:var(--gray-600)}
+.submit-btn{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .25s}
+.submit-btn:hover{background:var(--teal-bright)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.submit-note{font-size:11.5px;color:var(--gray-500);text-align:center;margin-top:12px}
+.confirm-msg{display:none;text-align:center;padding:48px 32px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:16px;margin-top:32px}
+.confirm-msg.visible{display:block}
+.confirm-icon{width:56px;height:56px;border-radius:50%;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);display:flex;align-items:center;justify-content:center;font-size:24px;color:#22c55e;margin:0 auto 16px}
+.confirm-msg h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--off-white);margin-bottom:8px}
+.confirm-msg p{font-size:14px;color:var(--gray-400);line-height:1.6;max-width:440px;margin:0 auto}
 
 @media(max-width:600px){
   .page{padding:60px 20px 80px}
@@ -299,6 +317,26 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white
       <h3>Rollout sequence</h3>
       <div class="rollout" id="rolloutTimeline"></div>
     </div>
+
+    <!-- Submit decisions -->
+    <div class="submit-section" id="submitSection">
+      <div class="submit-divider"></div>
+      <h3 class="submit-title">Confirm your decisions</h3>
+      <p class="submit-desc">Click below to submit. The team will receive your selections with the rollout plan and begin preparing for deployment.</p>
+      <div class="submit-optional">
+        <label>Any notes or changes? (optional)</label>
+        <textarea id="bossNotes" placeholder="E.g. 'I like Path A for Decision 1 but want to discuss Decision 4 further before committing.'"></textarea>
+      </div>
+      <button class="submit-btn" id="submitDecisionsBtn" onclick="submitDecisions()">Submit My Decisions &rarr;</button>
+      <p class="submit-note">Your selections will be emailed to the Burlington product team.</p>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="confirm-msg" id="confirmMsg">
+      <div class="confirm-icon">&#10003;</div>
+      <h3>Decisions submitted</h3>
+      <p>The team has been notified with your selections and rollout plan. No further action needed — we'll start building based on your choices.</p>
+    </div>
   </div>
 
 </div>
@@ -477,6 +515,72 @@ function buildSummary(){
   });
 
   document.getElementById('summary').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const decisionLabels={
+  1:{q:'Primary CTA',a:'Profile Assessment ($75) is primary',b:'Consultation ($150) stays primary',c:'Equal weight — both side by side'},
+  2:{q:'Services page',a:'Full replacement with detailed version',b:'Current stays, detailed becomes sub-page'},
+  3:{q:'Knowledge Center + Newsletter',a:'Launch both together',b:'Knowledge Center first, newsletter later'},
+  4:{q:'Approved Cases',a:'Launch now with representative anonymised cases',b:'Hold until client-consented cases'},
+  5:{q:'Assessment tools',a:'Deploy on subdomain now',b:'Hold until main site pages are live'},
+  6:{q:'Pathways page',a:'Add to primary navigation',b:'Footer and homepage only'}
+};
+
+function submitDecisions(){
+  const btn=document.getElementById('submitDecisionsBtn');
+  btn.disabled=true;
+  btn.textContent='Submitting...';
+
+  let summary='BURLINGTON CONSULT — STAKEHOLDER DECISIONS\n';
+  summary+='Submitted: '+new Date().toLocaleString()+'\n\n';
+
+  for(let i=1;i<=6;i++){
+    const c=choices[i];
+    const dl=decisionLabels[i];
+    summary+='Decision '+i+': '+dl.q+'\n';
+    summary+='→ Path '+c.toUpperCase()+': '+dl[c]+'\n\n';
+  }
+
+  const notes=document.getElementById('bossNotes').value.trim();
+  if(notes)summary+='\nAdditional notes:\n'+notes+'\n';
+
+  // Get the rollout phases text
+  const phases=document.querySelectorAll('.rollout-phase');
+  summary+='\n--- ROLLOUT PLAN ---\n';
+  phases.forEach(p=>{
+    const label=p.querySelector('.phase-label').textContent;
+    const title=p.querySelector('h4').textContent;
+    const desc=p.querySelector('p').textContent;
+    summary+=label+': '+title+' — '+desc+'\n';
+  });
+
+  fetch('https://api.web3forms.com/submit',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      access_key:'eea989d4-e63c-44c3-ad74-f3c9eb9f7aa9',
+      subject:'Burlington Consult — Stakeholder Decisions Submitted',
+      from_name:'Burlington Decision Guide',
+      message:summary
+    })
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.success){
+      document.getElementById('submitSection').style.display='none';
+      document.getElementById('confirmMsg').classList.add('visible');
+      document.getElementById('confirmMsg').scrollIntoView({behavior:'smooth',block:'center'});
+    }else{
+      btn.disabled=false;
+      btn.textContent='Submit My Decisions →';
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(()=>{
+    btn.disabled=false;
+    btn.textContent='Submit My Decisions →';
+    alert('Connection error. Please try again.');
+  });
 }
 </script>
 </body>

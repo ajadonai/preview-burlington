@@ -31,6 +31,11 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white
 .funnel-flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .funnel-step{padding:10px 18px;background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);border-radius:8px;font-size:13px;color:var(--teal-bright);font-weight:500}
 .funnel-arrow{color:var(--gray-500);font-size:14px}
+.decision-link{display:block;padding:28px 32px;background:linear-gradient(135deg,rgba(13,148,136,.08),rgba(13,148,136,.03));border:1px solid rgba(13,148,136,.25);border-radius:14px;text-decoration:none;margin-bottom:40px;transition:all .3s}
+.decision-link:hover{border-color:var(--teal);transform:translateY(-2px)}
+.decision-link .dl-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.decision-link h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--off-white);margin-bottom:6px}
+.decision-link p{font-size:13px;color:var(--gray-400);line-height:1.55}
 .dot-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
 .content{position:relative;z-index:1}
 @media(max-width:600px){.page{padding:60px 20px 80px}.card{flex-direction:column;gap:12px}.funnel-flow{flex-direction:column;align-items:flex-start}}
@@ -45,6 +50,12 @@ body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white
 <div class="page">
   <div class="brand">Burlington Consult</div>
   <div class="subtitle">Preview mockups for stakeholder review. Eight pages across two sets. Click any card to open the full-page preview.</div>
+
+  <a class="decision-link" href="decisions.html">
+    <div class="dl-label">Start here</div>
+    <h3>Decision Guide &rarr;</h3>
+    <p>Six decisions that shape the rollout. Pick your preferred path for each, and the guide builds your navigation, funnel, and phased rollout timeline automatically.</p>
+  </a>
 
   <!-- SET 1 -->
   <div class="set-label">Set 1 — New site pages</div>

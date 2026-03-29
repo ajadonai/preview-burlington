@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burlington Consult — Decision Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#0a0a1a;--dark-2:#111128;--dark-3:#161633;--teal:#0d9488;--teal-bright:#14b8a6;--teal-glow:rgba(13,148,136,.12);--off-white:#f0f0ec;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--green:#22c55e;--green-bg:rgba(34,197,94,.06);--amber:#f59e0b;--amber-bg:rgba(245,158,11,.06);--border:rgba(255,255,255,.06);--border-2:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white);-webkit-font-smoothing:antialiased;min-height:100vh}
+.banner{background:rgba(245,158,11,.08);border-bottom:1px solid rgba(245,158,11,.2);padding:12px 40px;text-align:center;font-size:12px;color:#f59e0b;font-weight:500}
+.page{max-width:840px;margin:0 auto;padding:80px 32px 120px}
+.brand{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--off-white);margin-bottom:8px}
+.subtitle{font-size:15px;color:var(--gray-400);line-height:1.65;margin-bottom:16px;max-width:600px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--teal);text-decoration:none;margin-bottom:48px}
+.back-link:hover{color:var(--teal-bright)}
+
+/* Decision cards */
+.decision{margin-bottom:40px;background:var(--dark-2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .3s}
+.decision.answered{border-color:rgba(13,148,136,.2)}
+.d-header{padding:28px 32px 0}
+.d-num{display:inline-block;padding:3px 10px;border-radius:6px;background:var(--teal-glow);color:var(--teal);font-size:11px;font-weight:600;letter-spacing:.5px;margin-bottom:12px}
+.d-question{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--off-white);line-height:1.35;margin-bottom:6px}
+.d-context{font-size:13px;color:var(--gray-500);line-height:1.55;margin-bottom:24px;max-width:580px}
+
+/* Options */
+.d-options{padding:0 32px 28px;display:flex;flex-direction:column;gap:10px}
+.d-opt{display:flex;gap:16px;align-items:flex-start;padding:18px 20px;border:1px solid var(--border-2);border-radius:12px;cursor:pointer;transition:all .25s;background:transparent}
+.d-opt:hover{border-color:rgba(13,148,136,.3);background:rgba(13,148,136,.03)}
+.d-opt.selected{border-color:var(--teal);background:var(--teal-glow)}
+.d-opt.not-selected{opacity:.35;pointer-events:none}
+.opt-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-2);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s}
+.d-opt.selected .opt-radio{border-color:var(--teal);background:var(--teal)}
+.d-opt.selected .opt-radio::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.opt-content h4{font-size:14px;font-weight:500;color:var(--off-white);margin-bottom:3px}
+.opt-content p{font-size:12.5px;color:var(--gray-500);line-height:1.5}
+.opt-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:500;margin-top:6px}
+.tag-rec{background:var(--green-bg);color:var(--green)}
+.tag-safe{background:var(--amber-bg);color:var(--amber)}
+
+/* Impact preview */
+.d-impact{display:none;padding:0 32px 28px}
+.d-impact.visible{display:block}
+.impact-card{background:var(--dark-3);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.impact-label{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.impact-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.impact-item:last-child{margin-bottom:0}
+.impact-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0;margin-top:6px}
+.impact-text{font-size:13px;color:var(--gray-300);line-height:1.5}
+
+/* Summary */
+.summary{display:none;margin-top:48px}
+.summary.visible{display:block}
+.summary-header{margin-bottom:28px}
+.summary-header h2{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--off-white);margin-bottom:8px}
+.summary-header p{font-size:14px;color:var(--gray-400);line-height:1.6}
+
+.summary-section{margin-bottom:32px}
+.summary-section h3{font-size:14px;font-weight:500;color:var(--teal);margin-bottom:16px;letter-spacing:.5px}
+
+/* Nav preview */
+.nav-preview{display:flex;align-items:center;gap:0;padding:14px 24px;background:var(--dark-2);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;overflow-x:auto}
+.nav-preview .np-brand{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--off-white);margin-right:auto;white-space:nowrap}
+.nav-preview .np-item{padding:6px 16px;font-size:12px;color:var(--gray-400);white-space:nowrap}
+.nav-preview .np-item.new{color:var(--teal);font-weight:500}
+.nav-preview .np-cta{padding:6px 16px;background:var(--teal);color:#fff;border-radius:6px;font-size:11px;font-weight:500;white-space:nowrap}
+
+/* Funnel preview */
+.funnel-preview{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.fp-step{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500}
+.fp-cold{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--gray-400)}
+.fp-warm{background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);color:var(--teal-bright)}
+.fp-hot{background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);color:var(--teal-bright)}
+.fp-arrow{color:var(--gray-600);font-size:12px}
+
+/* Rollout timeline */
+.rollout{display:flex;flex-direction:column;gap:12px}
+.rollout-phase{display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--dark-2);border:1px solid var(--border);border-radius:12px}
+.phase-label{padding:4px 10px;border-radius:6px;background:var(--teal-glow);color:var(--teal);font-size:11px;font-weight:600;flex-shrink:0;min-width:72px;text-align:center}
+.phase-content h4{font-size:13px;font-weight:500;color:var(--off-white);margin-bottom:2px}
+.phase-content p{font-size:12px;color:var(--gray-500);line-height:1.5}
+
+.dot-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
+.content{position:relative;z-index:1}
+
+@media(max-width:600px){
+  .page{padding:60px 20px 80px}
+  .d-header{padding:20px 20px 0}
+  .d-options{padding:0 20px 20px}
+  .d-impact{padding:0 20px 20px}
+  .nav-preview{gap:0}
+  .funnel-preview{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="dot-grid"></div>
+<div class="content">
+
+<div class="banner">DECISION GUIDE — Select your preferred path for each decision. Your summary builds at the bottom.</div>
+
+<div class="page">
+  <div class="brand">Burlington Consult</div>
+  <div class="subtitle">Six decisions that shape the rollout. Pick one option per decision. As you choose, the summary at the bottom updates to show you the resulting navigation, funnel, and rollout timeline.</div>
+  <a class="back-link" href="index.html">&larr; Back to mockup index</a>
+
+  <!-- DECISION 1 -->
+  <div class="decision" id="d1">
+    <div class="d-header">
+      <div class="d-num">Decision 1</div>
+      <div class="d-question">What becomes the primary CTA across the site?</div>
+      <div class="d-context">This determines the main button in the navigation, hero sections, and page footers. The other option becomes the secondary (ghost button) CTA.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(1,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Profile Assessment ($75) is primary</h4>
+          <p>Lower barrier to entry. Captures more leads. Consultation becomes the upsell after the 48-hour written response. Best for volume.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(1,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Consultation ($150) stays primary</h4>
+          <p>Higher barrier, fewer but more qualified leads. Profile Assessment appears as secondary CTA. Best for premium positioning.</p>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(1,'c')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path C: Equal weight — both CTAs side by side</h4>
+          <p>Let the prospect self-select. Two buttons everywhere. More choice, but may create decision paralysis.</p>
+          <span class="opt-tag tag-safe">Safe middle ground</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d1impact"></div>
+  </div>
+
+  <!-- DECISION 2 -->
+  <div class="decision" id="d2">
+    <div class="d-header">
+      <div class="d-num">Decision 2</div>
+      <div class="d-question">Does the detailed Services page replace the current one?</div>
+      <div class="d-context">The new Services mockup includes six deliverables, visual timeline, transparent pricing ($20K with market comparison), and named team leads. It's significantly more detailed than the current version.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(2,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Full replacement</h4>
+          <p>New detailed page takes over /services entirely. Visitors see pricing, timeline, deliverables immediately. Signals confidence and transparency.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(2,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Current page stays, detailed version becomes a sub-page</h4>
+          <p>Current /services remains as a lighter overview. Detailed version lives at /services/detail or similar. Two-click depth to see pricing.</p>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d2impact"></div>
+  </div>
+
+  <!-- DECISION 3 -->
+  <div class="decision" id="d3">
+    <div class="d-header">
+      <div class="d-num">Decision 3</div>
+      <div class="d-question">Knowledge Center and Newsletter — launch together or phase?</div>
+      <div class="d-context">The Knowledge Center needs content to be useful. The Burlington Brief needs the Knowledge Center to have a content home. They're connected, but content takes time to produce.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(3,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Launch both together</h4>
+          <p>Ship the Knowledge Center with 3–4 launch articles (regulatory update, field of endeavour guide, RFE response framework, dual petition explainer) and the newsletter signup simultaneously.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(3,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Knowledge Center first, newsletter later</h4>
+          <p>Launch the Knowledge Center page structure now. Add newsletter capture once there's a regular content cadence (4+ articles published). Avoids collecting emails with nothing to send.</p>
+          <span class="opt-tag tag-safe">Lower commitment</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d3impact"></div>
+  </div>
+
+  <!-- DECISION 4 -->
+  <div class="decision" id="d4">
+    <div class="d-header">
+      <div class="d-num">Decision 4</div>
+      <div class="d-question">Approved Cases page — launch with representative examples or wait for real data?</div>
+      <div class="d-context">The case study library is the single highest-conversion page identified in the competitive analysis. But publishing fabricated cases would damage credibility if discovered. The mockup uses representative but anonymised examples.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(4,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Launch now with representative anonymised cases</h4>
+          <p>Use real engagement patterns (field of endeavour, criteria, timelines) from actual work, anonymised. Not fabricated — drawn from real experience, just not attributed to specific clients.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(4,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Hold until clients consent to case publication</h4>
+          <p>Wait until 4–6 clients agree to have their anonymised outcomes published. More defensible but delays the highest-impact page.</p>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d4impact"></div>
+  </div>
+
+  <!-- DECISION 5 -->
+  <div class="decision" id="d5">
+    <div class="d-header">
+      <div class="d-num">Decision 5</div>
+      <div class="d-question">Assessment tools — deploy now or hold?</div>
+      <div class="d-context">The V3 Benchmark and V4 Advisor are self-service eligibility quizzes for cold traffic. They live on a separate subdomain and funnel to the $75 Profile Assessment. They're a marketing tool, not a core site feature.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(5,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Deploy on assess.burlingtonconsult.com now</h4>
+          <p>Start driving cold traffic (LinkedIn ads, email campaigns) to the free quiz immediately. Begin A/B testing V3 vs V4. Build the email list early.</p>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(5,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Hold until main site pages are live</h4>
+          <p>Get the six site pages approved and deployed first. Then launch assessment tools once the funnel endpoint ($75 Profile Assessment page) is actually live. Avoids dead-end links.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d5impact"></div>
+  </div>
+
+  <!-- DECISION 6 -->
+  <div class="decision" id="d6">
+    <div class="d-header">
+      <div class="d-num">Decision 6</div>
+      <div class="d-question">Pathways page — gets a nav item or lives in the footer?</div>
+      <div class="d-context">The Pathways page segments audiences by profession (STEM, Creative, Business, Medicine, Law, Academia). Adding it to the nav makes it highly visible but adds a fifth item. Keeping it in the footer preserves the clean four-item nav.</div>
+    </div>
+    <div class="d-options">
+      <div class="d-opt" onclick="pick(6,'a')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path A: Add to primary navigation</h4>
+          <p>Nav becomes: About · Services · Team · Cases · Pathways. Five items plus CTA. More discoverable but slightly heavier nav.</p>
+        </div>
+      </div>
+      <div class="d-opt" onclick="pick(6,'b')">
+        <div class="opt-radio"></div>
+        <div class="opt-content">
+          <h4>Path B: Footer and homepage only</h4>
+          <p>Pathways lives in the footer column and is linked from the homepage hero or About page. Nav stays clean at four items. Accessed through contextual discovery.</p>
+          <span class="opt-tag tag-rec">Recommended</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-impact" id="d6impact"></div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary" id="summary">
+    <div class="summary-header">
+      <h2>Your rollout plan</h2>
+      <p>Based on your selections, here's what the site looks like and how the rollout is sequenced.</p>
+    </div>
+
+    <div class="summary-section">
+      <h3>Navigation</h3>
+      <div class="nav-preview" id="navPreview">
+        <div class="np-brand">Burlington Consult</div>
+      </div>
+    </div>
+
+    <div class="summary-section">
+      <h3>Conversion funnel</h3>
+      <div class="funnel-preview" id="funnelPreview"></div>
+    </div>
+
+    <div class="summary-section">
+      <h3>Rollout sequence</h3>
+      <div class="rollout" id="rolloutTimeline"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const choices={};
+const impacts={
+  1:{
+    a:[
+      'Primary CTA sitewide becomes "Profile Assessment · $75"',
+      '"Book a Consultation · $150" becomes the secondary ghost button',
+      'Higher lead volume, lower average lead quality — team filters via 48hr review',
+      'Navigation CTA button text changes to "Profile Assessment →"'
+    ],
+    b:[
+      'Primary CTA stays "Book a Consultation · $150"',
+      '"Profile Assessment · $75" appears as secondary ghost button',
+      'Fewer but more committed leads — every inbound has already paid $150',
+      'Navigation CTA button stays "Book a Consultation →"'
+    ],
+    c:[
+      'Both CTAs appear side by side on every page footer and hero',
+      'Prospect self-selects based on readiness',
+      'Navigation CTA stays "Book a Consultation →" (can\'t fit two buttons in nav)',
+      'May create decision friction — two choices compete for attention'
+    ]
+  },
+  2:{
+    a:[
+      'Current /services page is fully replaced with the detailed version',
+      'Pricing ($20K), milestone breakdown, and market comparison visible immediately',
+      'Reduces objections before the consultation — prospect already knows the cost',
+      'Signals confidence: Burlington publishes what others hide'
+    ],
+    b:[
+      'Current /services stays as a lighter overview page',
+      'Detailed version lives at a sub-URL (/services/immigration-advisory or similar)',
+      'Two clicks to see pricing — may lose impatient visitors',
+      'Allows testing whether lighter or heavier page converts better'
+    ]
+  },
+  3:{
+    a:[
+      'Knowledge Center launches with 3–4 articles on day one',
+      'Burlington Brief newsletter signup goes live simultaneously',
+      'Requires content production before launch (estimate: 1–2 weeks for 4 articles)',
+      'Builds email list from day one — captures subscribers while traffic is fresh'
+    ],
+    b:[
+      'Knowledge Center page structure goes live but with fewer articles',
+      'Newsletter capture added later once regular publishing cadence is established',
+      'Lower launch effort — no need for 4 articles upfront',
+      'Risk: empty or thin content page looks worse than no page at all'
+    ]
+  },
+  4:{
+    a:[
+      'Cases page goes live immediately with anonymised representative examples',
+      'Highest-conversion page available from launch',
+      'Cases are drawn from real engagement patterns, anonymised — not fabricated',
+      'Add real client-consented cases over time as they become available'
+    ],
+    b:[
+      'Cases page is built but not published until real cases are documented',
+      'Delays the single highest-impact page on the site',
+      'More defensible — every case is a real, consented outcome',
+      'Could take 2–6 months depending on client consent timelines'
+    ]
+  },
+  5:{
+    a:[
+      'Assessment tools deployed on assess.burlingtonconsult.com immediately',
+      'Can start LinkedIn ads and email campaigns pointing to the free quiz',
+      'Risk: quiz results link to $75 Profile Assessment page that isn\'t live yet',
+      'Requires Profile Assessment page to be live first — or a temporary landing page'
+    ],
+    b:[
+      'Assessment tools are held until main site pages are deployed',
+      'Ensures the full funnel is connected end-to-end before marketing begins',
+      'No dead-end links or broken conversion paths',
+      'Assessment tools launch as Phase 2 after site pages are confirmed live'
+    ]
+  },
+  6:{
+    a:[
+      'Navigation becomes: About · Services · Team · Cases · Pathways + CTA',
+      'Five nav items — slightly heavier but more discoverable',
+      'Pathways page is one click from anywhere on the site',
+      'Good if audience segmentation is a core differentiator you want to lead with'
+    ],
+    b:[
+      'Navigation stays clean: About · Services · Team · Cases + CTA',
+      'Pathways linked from footer column and homepage',
+      'Discovered contextually — visitors who need it find it, others aren\'t distracted',
+      'Preserves the current minimal nav feel'
+    ]
+  }
+};
+
+function pick(d,v){
+  choices[d]=v;
+  const opts=document.querySelectorAll('#d'+d+' .d-opt');
+  opts.forEach(o=>{
+    const val=o.getAttribute('onclick').match(/'(\w)'/)[1];
+    o.classList.remove('selected','not-selected');
+    if(val===v)o.classList.add('selected');
+    else o.classList.add('not-selected');
+  });
+  document.getElementById('d'+d).classList.add('answered');
+  const impDiv=document.getElementById('d'+d+'impact');
+  impDiv.classList.add('visible');
+  impDiv.innerHTML='<div class="impact-card"><div class="impact-label">What this means</div>'+
+    impacts[d][v].map(t=>'<div class="impact-item"><div class="impact-dot"></div><div class="impact-text">'+t+'</div></div>').join('')+'</div>';
+  if(Object.keys(choices).length===6)buildSummary();
+}
+
+function buildSummary(){
+  document.getElementById('summary').classList.add('visible');
+
+  // Nav preview
+  const nav=document.getElementById('navPreview');
+  nav.innerHTML='<div class="np-brand">Burlington Consult</div>';
+  nav.innerHTML+='<div class="np-item">About</div>';
+  nav.innerHTML+='<div class="np-item">Services</div>';
+  nav.innerHTML+='<div class="np-item">Team</div>';
+  if(choices[4]==='a')nav.innerHTML+='<div class="np-item new">Cases</div>';
+  else nav.innerHTML+='<div class="np-item" style="opacity:.4">Cases (later)</div>';
+  if(choices[6]==='a')nav.innerHTML+='<div class="np-item new">Pathways</div>';
+  if(choices[1]==='a')nav.innerHTML+='<div class="np-cta">Profile Assessment →</div>';
+  else nav.innerHTML+='<div class="np-cta">Book a Consultation →</div>';
+
+  // Funnel
+  const funnel=document.getElementById('funnelPreview');
+  funnel.innerHTML='';
+  if(choices[5]==='a'){
+    funnel.innerHTML+='<div class="fp-step fp-cold">Free assessment quiz</div><div class="fp-arrow">→</div>';
+  }
+  funnel.innerHTML+='<div class="fp-step fp-warm">$75 Profile Assessment</div><div class="fp-arrow">→</div>';
+  funnel.innerHTML+='<div class="fp-step fp-hot">$150 Consultation</div><div class="fp-arrow">→</div>';
+  funnel.innerHTML+='<div class="fp-step fp-hot">$20,000 Engagement</div>';
+
+  // Rollout timeline
+  const rollout=document.getElementById('rolloutTimeline');
+  rollout.innerHTML='';
+  const phases=[];
+
+  // Phase 1 always
+  let p1Items=[];
+  if(choices[2]==='a')p1Items.push('Replace Services page with detailed version');
+  else p1Items.push('Add detailed Services sub-page');
+  p1Items.push('Deploy Profile Assessment page ($75)');
+  if(choices[4]==='a')p1Items.push('Launch Approved Cases page');
+  if(choices[6]==='b')p1Items.push('Add Pathways page to footer');
+  if(choices[6]==='a')p1Items.push('Add Pathways page to navigation');
+  phases.push({label:'Phase 1',title:'Core site pages',desc:p1Items.join('. ')+'.'});
+
+  // Phase 2
+  let p2Items=[];
+  if(choices[3]==='a')p2Items.push('Launch Knowledge Center with 3–4 articles + Burlington Brief newsletter');
+  else p2Items.push('Launch Knowledge Center page structure');
+  if(choices[4]==='b')p2Items.push('Begin collecting client-consented case outcomes');
+  phases.push({label:'Phase 2',title:'Content + knowledge',desc:p2Items.join('. ')+'.'});
+
+  // Phase 3
+  let p3Items=[];
+  if(choices[5]==='b')p3Items.push('Deploy assessment tools on assess.burlingtonconsult.com');
+  if(choices[3]==='b')p3Items.push('Add Burlington Brief newsletter once content cadence is established');
+  if(choices[4]==='b')p3Items.push('Publish Approved Cases page when client cases are ready');
+  if(choices[5]==='a')p3Items.push('Begin A/B testing V3 Benchmark vs V4 Advisor');
+  if(p3Items.length===0)p3Items.push('Begin A/B testing assessment tools and optimise based on conversion data');
+  phases.push({label:'Phase 3',title:'Marketing + optimisation',desc:p3Items.join('. ')+'.'});
+
+  phases.forEach(p=>{
+    rollout.innerHTML+='<div class="rollout-phase"><div class="phase-label">'+p.label+'</div><div class="phase-content"><h4>'+p.title+'</h4><p>'+p.desc+'</p></div></div>';
+  });
+
+  document.getElementById('summary').scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>

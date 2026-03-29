@@ -554,14 +554,12 @@ function submitDecisions(){
     summary+=label+': '+title+' — '+desc+'\n';
   });
 
-  fetch('https://api.web3forms.com/submit',{
+  fetch('https://formsubmit.co/ajax/adonaijonathancrypto@gmail.com',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      access_key:'eea989d4-e63c-44c3-ad74-f3c9eb9f7aa9',
-      subject:'Burlington Consult — Stakeholder Decisions Submitted',
-      from_name:'Burlington Decision Guide',
-      cc:'adonaijonathancrypto@gmail.com',
+      _subject:'Burlington Consult — Stakeholder Decisions Submitted',
+      _template:'box',
       message:summary
     })
   })

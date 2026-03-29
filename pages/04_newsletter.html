@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Burlington Brief | Burlington Consult</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#0a0a1a;--dark-2:#111128;--teal:#0d9488;--teal-bright:#14b8a6;--teal-glow:rgba(13,148,136,.12);--off-white:#f0f0ec;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--border:rgba(255,255,255,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white);-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,26,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--off-white)}
+.nav-links{display:flex;gap:36px;align-items:center}
+.nav-links a{color:var(--gray-400);text-decoration:none;font-size:13.5px;transition:color .2s}
+.nav-links a:hover{color:var(--off-white)}
+.nav-cta{padding:10px 24px;background:var(--teal);color:#fff!important;border-radius:6px;font-size:13px;font-weight:500}
+.page{max-width:800px;margin:0 auto;padding:180px 40px 100px;text-align:center}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--teal);margin-bottom:28px}
+.page h1{font-family:'Playfair Display',serif;font-size:56px;font-weight:600;line-height:1.12;color:var(--off-white);margin-bottom:24px}
+.page h1 em{font-style:italic;background:linear-gradient(135deg,var(--teal),var(--teal-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page .subtitle{font-size:18px;line-height:1.7;color:var(--gray-400);max-width:560px;margin:0 auto 48px}
+.subscribe-form{display:flex;gap:10px;max-width:480px;margin:0 auto 20px}
+.subscribe-form input{flex:1;padding:16px 20px;background:var(--dark-2);border:1px solid var(--border);border-radius:10px;color:var(--off-white);font-family:'Inter',sans-serif;font-size:15px;outline:none;transition:border-color .25s}
+.subscribe-form input:focus{border-color:rgba(13,148,136,.5)}
+.subscribe-form input::placeholder{color:var(--gray-600)}
+.subscribe-form button{padding:16px 32px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background .25s;white-space:nowrap}
+.subscribe-form button:hover{background:var(--teal-bright)}
+.form-note{font-size:12px;color:var(--gray-500);margin-bottom:80px}
+.section-divider{width:48px;height:1px;background:var(--teal);margin:0 auto 48px}
+.what-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);margin-bottom:24px}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:640px;margin:0 auto 80px;text-align:left}
+.feature{padding:28px;background:var(--dark-2);border:1px solid var(--border);border-radius:14px;transition:border-color .3s}
+.feature:hover{border-color:rgba(13,148,136,.2)}
+.feature-icon{width:36px;height:36px;border-radius:10px;background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.feature h4{font-size:14px;font-weight:500;color:var(--off-white);margin-bottom:6px}
+.feature p{font-size:13px;color:var(--gray-500);line-height:1.55}
+.sample{max-width:640px;margin:0 auto 80px;text-align:left}
+.sample-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);margin-bottom:20px;text-align:center}
+.sample-card{background:var(--dark-2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.sample-header{padding:28px 28px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.sample-header .issue{font-size:11px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase}
+.sample-header .date{font-size:12px;color:var(--gray-500)}
+.sample-title{padding:16px 28px 0;font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--off-white);line-height:1.35}
+.sample-items{padding:20px 28px 28px;display:flex;flex-direction:column;gap:14px}
+.sample-item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--border)}
+.sample-item:first-child{border-top:none}
+.item-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--teal);min-width:28px}
+.item-text h5{font-size:13.5px;font-weight:500;color:var(--off-white);margin-bottom:4px}
+.item-text p{font-size:12.5px;color:var(--gray-500);line-height:1.5}
+.gated{max-width:640px;margin:0 auto;padding:48px;background:var(--dark-2);border:1px solid var(--border);border-radius:16px;text-align:center;position:relative;overflow:hidden}
+.gated::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.08),transparent 70%)}
+.gated-badge{display:inline-block;padding:5px 14px;border-radius:100px;background:var(--teal-glow);color:var(--teal);font-size:11px;font-weight:500;margin-bottom:16px;position:relative;z-index:1}
+.gated h3{font-family:'Playfair Display',serif;font-size:24px;font-weight:500;color:var(--off-white);margin-bottom:12px;position:relative;z-index:1}
+.gated p{font-size:14px;color:var(--gray-400);line-height:1.6;margin-bottom:24px;position:relative;z-index:1;max-width:440px;margin-left:auto;margin-right:auto}
+.gated-form{display:flex;gap:10px;max-width:400px;margin:0 auto;position:relative;z-index:1}
+.gated-form input{flex:1;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--off-white);font-family:'Inter',sans-serif;font-size:13px;outline:none}
+.gated-form input:focus{border-color:rgba(13,148,136,.5)}
+.gated-form input::placeholder{color:var(--gray-600)}
+.gated-form button{padding:12px 24px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap}
+.dot-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
+.content{position:relative;z-index:1}
+@media(max-width:700px){.nav{padding:16px 24px}.page{padding:130px 24px 60px}.page h1{font-size:36px}.subscribe-form{flex-direction:column}.features{grid-template-columns:1fr}.gated-form{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="dot-grid"></div>
+<div class="content">
+<nav class="nav">
+  <div class="nav-brand">Burlington Consult</div>
+  <div class="nav-links"><a href="#">About</a><a href="#">Services</a><a href="#">Team</a><a href="#">Cases</a><a href="#" class="nav-cta">Book a Consultation &rarr;</a></div>
+</nav>
+<div class="page">
+  <div class="eyebrow">Fortnightly Intelligence</div>
+  <h1>The Burlington <em>Brief</em></h1>
+  <p class="subtitle">A private advisory update on U.S. immigration strategy. Regulatory shifts, adjudication data, case strategy insights, and practitioner analysis — written for senior professionals, not mass audiences.</p>
+  <div class="subscribe-form"><input type="email" placeholder="Your email address"><button>Subscribe &rarr;</button></div>
+  <p class="form-note">Free. Fortnightly. Unsubscribe anytime.</p>
+  <div class="section-divider"></div>
+  <div class="what-label">What you receive</div>
+  <div class="features">
+    <div class="feature"><div class="feature-icon"><svg width="16" height="16" fill="none" stroke="#14b8a6" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Regulatory intelligence</h4><p>Early analysis of proposed rules, executive orders, and USCIS policy memoranda that affect EB-1A and NIW filings.</p></div>
+    <div class="feature"><div class="feature-icon"><svg width="16" height="16" fill="none" stroke="#14b8a6" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h4>Adjudication data</h4><p>Approval rates, RFE issuance trends, processing time shifts, and what they mean for filing timing and evidence strategy.</p></div>
+    <div class="feature"><div class="feature-icon"><svg width="16" height="16" fill="none" stroke="#14b8a6" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div><h4>Case strategy notes</h4><p>How specific evidence types, field of endeavour framings, and recommendation letter strategies are performing with USCIS.</p></div>
+    <div class="feature"><div class="feature-icon"><svg width="16" height="16" fill="none" stroke="#14b8a6" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div><h4>Practitioner perspective</h4><p>Written by Burlington's lead adviser — a Harvard Law-trained, self-petitioned EB-1A holder. Not outsourced content.</p></div>
+  </div>
+  <div class="sample-label">Sample issue preview</div>
+  <div class="sample">
+    <div class="sample-card">
+      <div class="sample-header"><div class="issue">Issue #12 &middot; The Burlington Brief</div><div class="date">March 14, 2026</div></div>
+      <div class="sample-title">RFE rates climb to 49%, proposed rule comment period approaches, and why the "high salary" criterion is becoming the most contested battleground</div>
+      <div class="sample-items">
+        <div class="sample-item"><div class="item-num">1</div><div class="item-text"><h5>USCIS RFE issuance hits 49% for EB-1A in February 2026</h5><p>Highest monthly figure since tracking began. What's driving it, which criteria are triggering it, and how to build an evidence record that pre-empts the most common RFE patterns.</p></div></div>
+        <div class="sample-item"><div class="item-num">2</div><div class="item-text"><h5>RIN 1615-AC85 comment period: what to watch</h5><p>The proposed rule hasn't taken effect, but the comment period shapes the final version. Key provisions that would change the evidentiary bar and what the comment window means for filing timing.</p></div></div>
+        <div class="sample-item"><div class="item-num">3</div><div class="item-text"><h5>The "high salary" criterion: why USCIS is scrutinising it harder</h5><p>Criterion VIII is seeing more RFEs than any other. The adjudicator standard is shifting from raw numbers to relative positioning against peers in the field in relevant country. How to frame salary evidence that survives review.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="gated">
+    <div class="gated-badge">Free download for subscribers</div>
+    <h3>EB-1A Criteria Mapping Template</h3>
+    <p>The same criterion-by-criterion mapping framework Burlington uses to assess every client engagement. Map your evidence against all ten EB-1A criteria and the three Dhanasar prongs.</p>
+    <div class="gated-form"><input type="email" placeholder="Your email to receive the template"><button>Get the Template &rarr;</button></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

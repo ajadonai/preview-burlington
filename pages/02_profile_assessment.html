@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Assessment | Burlington Consult</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#0a0a1a;--dark-2:#111128;--teal:#0d9488;--teal-bright:#14b8a6;--teal-glow:rgba(13,148,136,.12);--off-white:#f0f0ec;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--border:rgba(255,255,255,.06);--border-focus:rgba(13,148,136,.5)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white);-webkit-font-smoothing:antialiased}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,26,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--off-white)}
+.nav-links{display:flex;gap:36px;align-items:center}
+.nav-links a{color:var(--gray-400);text-decoration:none;font-size:13.5px;transition:color .2s}
+.nav-links a:hover{color:var(--off-white)}
+.nav-cta{padding:10px 24px;background:var(--teal);color:#fff!important;border-radius:6px;font-size:13px;font-weight:500}
+.page-wrapper{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+.left-panel{padding:140px 60px 80px;display:flex;flex-direction:column;justify-content:center;position:sticky;top:0;height:100vh}
+.left-label{font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);margin-bottom:24px}
+.left-panel h1{font-family:'Playfair Display',serif;font-size:42px;font-weight:600;line-height:1.2;color:var(--off-white);margin-bottom:20px}
+.left-panel .subtitle{font-size:16px;line-height:1.7;color:var(--gray-400);margin-bottom:48px;max-width:420px}
+.trust-points{display:flex;flex-direction:column;gap:20px}
+.trust-item{display:flex;gap:14px;align-items:flex-start}
+.trust-icon{width:36px;height:36px;border-radius:10px;background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--teal);font-size:14px}
+.trust-text h4{font-size:13.5px;font-weight:500;color:var(--off-white);margin-bottom:3px}
+.trust-text p{font-size:12.5px;color:var(--gray-500);line-height:1.5}
+.right-panel{padding:140px 60px 80px;background:var(--dark-2);border-left:1px solid var(--border);overflow-y:auto}
+.form-section{max-width:480px}
+.form-progress{display:flex;gap:6px;margin-bottom:40px}
+.progress-dot{width:100%;height:3px;border-radius:4px;background:rgba(255,255,255,.06)}
+.progress-dot.active{background:var(--teal)}
+.progress-dot.done{background:var(--teal-bright)}
+.step-label{font-size:11px;color:var(--gray-500);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.step-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:500;color:var(--off-white);margin-bottom:32px}
+.form-group{margin-bottom:24px}
+.form-group label{display:block;font-size:12.5px;font-weight:500;color:var(--gray-400);margin-bottom:8px;letter-spacing:.3px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--off-white);font-family:'Inter',sans-serif;font-size:14px;transition:all .25s;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--border-focus);background:rgba(13,148,136,.04)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--gray-600)}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.form-group select option{background:var(--dark-2);color:var(--off-white)}
+.form-group textarea{min-height:100px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.range-group{margin-bottom:24px}
+.range-group label{display:block;font-size:12.5px;font-weight:500;color:var(--gray-400);margin-bottom:12px}
+.range-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.range-option{padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--gray-400);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s;text-align:center}
+.range-option:hover{border-color:rgba(13,148,136,.3);color:var(--off-white)}
+.range-option.selected{background:var(--teal-glow);border-color:var(--teal);color:var(--teal)}
+.checkbox-group{margin-bottom:24px}
+.checkbox-group label.group-label{display:block;font-size:12.5px;font-weight:500;color:var(--gray-400);margin-bottom:12px}
+.checkbox-options{display:flex;flex-wrap:wrap;gap:8px}
+.checkbox-opt{padding:8px 16px;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--gray-400);font-size:12.5px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .2s}
+.checkbox-opt:hover{border-color:rgba(13,148,136,.3);color:var(--off-white)}
+.checkbox-opt.checked{background:var(--teal-glow);border-color:var(--teal);color:var(--teal)}
+.form-submit{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .25s;margin-top:12px}
+.form-submit:hover{background:var(--teal-bright)}
+.form-note{font-size:11.5px;color:var(--gray-500);text-align:center;margin-top:16px;line-height:1.6}
+.form-note strong{color:var(--gray-400);font-weight:500}
+.divider{height:1px;background:var(--border);margin:32px 0}
+.fee-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);border-radius:10px;margin-bottom:24px}
+.fee-badge .fee-amount{font-size:18px;font-weight:600;color:var(--teal-bright)}
+.fee-badge .fee-detail{font-size:12px;color:var(--gray-400);line-height:1.4}
+
+/* Step 2: Upload screen */
+.upload-step{display:none}
+.upload-step.visible{display:block}
+.main-form.hidden{display:none}
+.upload-area{border:2px dashed rgba(13,148,136,.25);border-radius:14px;padding:40px;text-align:center;margin-bottom:24px;cursor:pointer;transition:all .25s}
+.upload-area:hover{border-color:var(--teal);background:rgba(13,148,136,.03)}
+.upload-icon{margin-bottom:12px;color:var(--teal)}
+.upload-area h4{font-size:15px;font-weight:500;color:var(--off-white);margin-bottom:6px}
+.upload-area p{font-size:13px;color:var(--gray-500)}
+.skip-link{display:block;text-align:center;color:var(--gray-400);font-size:13px;cursor:pointer;margin-top:16px;text-decoration:underline;transition:color .2s}
+.skip-link:hover{color:var(--off-white)}
+.validation-msg{display:none;padding:12px 16px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:13px;color:#f87171;margin-bottom:12px;line-height:1.5}
+.validation-msg.visible{display:block}
+.field-error{border-color:rgba(239,68,68,.5)!important}
+
+@media(max-width:900px){.page-wrapper{grid-template-columns:1fr}.left-panel{position:static;height:auto;padding:120px 24px 40px}.right-panel{padding:40px 24px 80px;border-left:none;border-top:1px solid var(--border)}.nav{padding:16px 24px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">Burlington Consult</div>
+  <div class="nav-links">
+    <a href="#">About</a><a href="#">Services</a><a href="#">Team</a><a href="#">Cases</a>
+    <a href="#" class="nav-cta">Book a Consultation &rarr;</a>
+  </div>
+</nav>
+<div class="page-wrapper">
+  <div class="left-panel">
+    <div class="left-label">Profile Assessment</div>
+    <h1>Find out where you stand</h1>
+    <p class="subtitle">Complete this structured profile review. Burlington Consult will assess your eligibility for a Green Card across both the Einstein Visa (EB-1A) and EB-2 National Interest Waiver pathways and respond within 48 hours with a preliminary indication and recommended next steps.</p>
+    <div class="trust-points">
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1v4m0 14v4M5.64 5.64l2.83 2.83m7.07 7.07l2.83 2.83M1 12h4m14 0h4"/></svg></div>
+        <div class="trust-text"><h4>$75 — credited toward consultation</h4><p>If you proceed to a $150 consultation within 30 days, the $75 is credited in full. You only pay the difference.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="trust-text"><h4>Reviewed by case architects</h4><p>Your submission is reviewed by Burlington's research team — not an automated tool or AI screening system.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="trust-text"><h4>Response within 48 hours</h4><p>You'll receive a written preliminary assessment identifying your strongest pathway and any evidence gaps.</p></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div>
+        <div class="trust-text"><h4>Full credit ladder</h4><p>$75 assessment → $150 consultation → $20,000 engagement. Every fee rolls forward. Nothing is wasted.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="form-section">
+
+      <!-- ===== MAIN FORM (Step 1) ===== -->
+      <div class="main-form" id="mainForm">
+        <div class="form-progress">
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <div class="fee-badge">
+          <div class="fee-amount">$75</div>
+          <div class="fee-detail">Preliminary assessment fee<br>Credited toward $150 consultation</div>
+        </div>
+
+        <div class="step-label">Step 1 of 2 &mdash; Your Background</div>
+        <div class="step-title">Professional profile</div>
+
+        <div class="form-row">
+          <div class="form-group"><label>First name</label><input type="text" placeholder="Jane"></div>
+          <div class="form-group"><label>Last name</label><input type="text" placeholder="Doe"></div>
+        </div>
+        <div class="form-group"><label>Email address</label><input type="email" placeholder="jane@example.com"></div>
+        <div class="form-group">
+          <label>Country of citizenship</label>
+          <select><option value="">Select country</option><option>Nigeria</option><option>India</option><option>China</option><option>United Kingdom</option><option>Canada</option><option>Other</option></select>
+        </div>
+        <div class="form-group">
+          <label>Primary field / industry</label>
+          <select><option value="">Select your field</option><option>Technology / Software Engineering</option><option>Medicine / Healthcare</option><option>Finance / Banking</option><option>Law / Policy / Government</option><option>Science / Research</option><option>Arts / Entertainment / Media</option><option>Business / Entrepreneurship</option><option>Education / Academia</option><option>Other</option></select>
+        </div>
+        <div class="form-group">
+          <label>Highest academic qualification</label>
+          <select><option value="">Select qualification</option><option>Doctorate (Ph.D., M.D., J.D., Ed.D.)</option><option>Master's degree (M.S., M.A., M.B.A., LL.M.)</option><option>Bachelor's degree</option><option>Professional certification / diploma</option></select>
+        </div>
+        <div class="range-group">
+          <label>Years of professional experience</label>
+          <div class="range-options">
+            <button class="range-option">2–5 years</button>
+            <button class="range-option selected">5–10 years</button>
+            <button class="range-option">10–15 years</button>
+            <button class="range-option">15+ years</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="step-label">Evidence Indicators</div>
+        <div class="step-title" style="font-size:20px;margin-bottom:24px">Select all that apply to you</div>
+
+        <div class="checkbox-group">
+          <label class="group-label">Publications &amp; citations</label>
+          <div class="checkbox-options">
+            <button class="checkbox-opt">Peer-reviewed papers</button>
+            <button class="checkbox-opt">Conference papers</button>
+            <button class="checkbox-opt">Book chapters</button>
+            <button class="checkbox-opt">100+ citations</button>
+            <button class="checkbox-opt">Press coverage about my work</button>
+          </div>
+        </div>
+        <div class="checkbox-group">
+          <label class="group-label">Awards &amp; recognition</label>
+          <div class="checkbox-options">
+            <button class="checkbox-opt">National / international award</button>
+            <button class="checkbox-opt">Industry prize or honour</button>
+            <button class="checkbox-opt">Fellowship or grant</button>
+            <button class="checkbox-opt">Invited speaker</button>
+          </div>
+        </div>
+        <div class="checkbox-group">
+          <label class="group-label">Leadership &amp; impact</label>
+          <div class="checkbox-options">
+            <button class="checkbox-opt">Senior role at a major organisation</button>
+            <button class="checkbox-opt">Reviewed / judged others' work</button>
+            <button class="checkbox-opt">Distinguished association membership</button>
+            <button class="checkbox-opt">High salary relative to peers in the field in relevant country</button>
+            <button class="checkbox-opt">Patents or IP</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>Anything else we should know? (optional)</label>
+          <textarea placeholder="Briefly describe your most significant professional achievement or the work you plan to pursue in the United States."></textarea>
+        </div>
+
+        <div class="validation-msg" id="validationMsg"></div>
+        <button class="form-submit" id="continueBtn" onclick="validateAndContinue()">Continue to Step 2 &rarr;</button>
+        <p class="form-note">Your information is confidential and used solely for eligibility assessment.<br><strong>Burlington Consult does not share or sell personal data.</strong></p>
+      </div>
+
+      <!-- ===== UPLOAD STEP (Step 2) ===== -->
+      <div class="upload-step" id="uploadStep">
+        <div class="form-progress">
+          <div class="progress-dot done"></div>
+          <div class="progress-dot active"></div>
+        </div>
+
+        <div class="step-label">Step 2 of 2 &mdash; Optional</div>
+        <div class="step-title">Strengthen your assessment</div>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.65;margin-bottom:32px">Uploading your CV and sharing your LinkedIn profile helps Burlington's team provide a more specific and accurate preliminary assessment. Both are optional.</p>
+
+        <div class="upload-area" onclick="document.getElementById('cvUpload').click()">
+          <div class="upload-icon"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg></div>
+          <h4>Upload your CV</h4>
+          <p>PDF, DOC, or DOCX — max 10 MB</p>
+          <input type="file" id="cvUpload" accept=".pdf,.doc,.docx" style="display:none" onchange="handleFileUpload(this)">
+        </div>
+        <div id="fileConfirm" style="display:none;padding:12px 16px;background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);border-radius:10px;margin-bottom:24px;font-size:13px;color:var(--teal-bright)"></div>
+
+        <div class="form-group">
+          <label>LinkedIn profile URL (optional)</label>
+          <input type="url" placeholder="https://linkedin.com/in/your-profile">
+        </div>
+
+        <button class="form-submit" onclick="submitAssessment()">Submit Profile Assessment &rarr;</button>
+        <span class="skip-link" onclick="submitAssessment()">Skip and submit without uploads</span>
+        <p class="form-note" style="margin-top:20px">Payment of $75 will be collected on the next screen via Stripe.<br><strong>Credited in full toward your $150 consultation.</strong></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.range-option').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    btn.parentElement.querySelectorAll('.range-option').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+  });
+});
+document.querySelectorAll('.checkbox-opt').forEach(btn=>{
+  btn.addEventListener('click',()=>btn.classList.toggle('checked'));
+});
+function validateAndContinue(){
+  var inputs=document.querySelectorAll('#mainForm input[type="text"],#mainForm input[type="email"]');
+  var selects=document.querySelectorAll('#mainForm select');
+  var missing=[];
+  document.querySelectorAll('.field-error').forEach(el=>el.classList.remove('field-error'));
+  inputs.forEach(function(inp){
+    if(!inp.value.trim()){
+      inp.classList.add('field-error');
+      missing.push(inp.previousElementSibling?inp.previousElementSibling.textContent:'Field');
+    }
+  });
+  selects.forEach(function(sel){
+    if(!sel.value){
+      sel.classList.add('field-error');
+      missing.push(sel.previousElementSibling?sel.previousElementSibling.textContent:'Field');
+    }
+  });
+  var msg=document.getElementById('validationMsg');
+  if(missing.length>0){
+    msg.textContent='Please complete the following: '+missing.join(', ');
+    msg.classList.add('visible');
+    document.querySelector('.field-error').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  msg.classList.remove('visible');
+  document.getElementById('mainForm').classList.add('hidden');
+  document.getElementById('uploadStep').classList.add('visible');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function handleFileUpload(input){
+  if(input.files.length){
+    document.getElementById('fileConfirm').style.display='block';
+    document.getElementById('fileConfirm').textContent='\u2713 '+input.files[0].name+' uploaded successfully';
+  }
+}
+function submitAssessment(){
+  alert('In production, this redirects to Stripe Checkout for $75 payment, then confirms submission.');
+}
+</script>
+</body>
+</html>

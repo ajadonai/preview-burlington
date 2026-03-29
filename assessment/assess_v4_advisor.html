@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategic Assessment | Burlington Consult</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#0a0a1a;--dark-2:#111128;--dark-3:#161633;--teal:#0d9488;--teal-bright:#14b8a6;--teal-glow:rgba(13,148,136,.12);--off-white:#f0f0ec;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--green:#22c55e;--green-bg:rgba(34,197,94,.08);--amber:#f59e0b;--border:rgba(255,255,255,.06);--border-2:rgba(255,255,255,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--dark);color:var(--off-white);-webkit-font-smoothing:antialiased}
+.app{display:flex;flex-direction:column;height:100vh}
+/* Header */
+.hdr{padding:16px 32px;background:var(--dark-2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.hdr-brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--off-white)}
+.hdr-sep{width:1px;height:20px;background:var(--border)}
+.hdr-title{font-size:13px;color:var(--gray-400)}
+.hdr-badge{padding:4px 10px;border-radius:100px;background:var(--teal-glow);color:var(--teal);font-size:11px;font-weight:500}
+/* Chat */
+.chat-wrap{flex:1;overflow-y:auto;padding:32px 24px}
+.chat-inner{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.msg{display:flex;gap:12px;align-items:flex-start;animation:fadeUp .3s ease}
+.msg.user{flex-direction:row-reverse}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
+.msg:not(.user) .avatar{background:linear-gradient(135deg,var(--teal),var(--teal-bright));color:#fff}
+.msg.user .avatar{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--gray-400)}
+.bubble{max-width:480px;padding:16px 20px;border-radius:14px;font-size:14px;line-height:1.65;color:var(--gray-300)}
+.msg:not(.user) .bubble{background:var(--dark-2);border:1px solid var(--border);border-top-left-radius:4px}
+.msg.user .bubble{background:var(--teal-glow);border:1px solid rgba(13,148,136,.2);border-top-right-radius:4px;color:var(--off-white)}
+/* Options */
+.opts-wrap{max-width:480px;display:flex;flex-direction:column;gap:8px;margin-left:48px}
+.opt-btn{background:rgba(255,255,255,.03);border:1px solid var(--border-2);border-radius:10px;padding:12px 18px;font-size:13.5px;cursor:pointer;transition:all .2s;text-align:left;color:var(--gray-300);font-family:'Inter',sans-serif}
+.opt-btn:hover{background:rgba(13,148,136,.06);border-color:rgba(13,148,136,.3);color:var(--off-white)}
+.opt-btn.chosen{background:var(--teal-glow);border-color:var(--teal);color:var(--teal-bright);pointer-events:none}
+.opts-wrap.done .opt-btn:not(.chosen){display:none}
+/* Typing */
+.typing{display:flex;gap:4px;padding:12px 16px}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gray-500);animation:typePulse 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typePulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+/* Result cards */
+.result-card{max-width:480px;margin-left:48px;background:var(--dark-2);border:1px solid var(--border);border-radius:14px;overflow:hidden;animation:fadeUp .4s ease}
+.rc-header{padding:16px 20px;font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--off-white);border-bottom:1px solid var(--border)}
+.rc-body{padding:20px}
+.rc-status{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500;margin-bottom:12px}
+.rc-strong .rc-status{background:var(--teal-glow);color:var(--teal)}
+.rc-elig .rc-status{background:var(--green-bg);color:var(--green)}
+.rc-weak .rc-status{background:rgba(255,255,255,.04);color:var(--gray-500)}
+.rc-score{font-family:'Playfair Display',serif;font-size:32px;font-weight:600;margin-bottom:4px}
+.rc-strong .rc-score{color:var(--teal-bright)}
+.rc-elig .rc-score{color:var(--green)}
+.rc-weak .rc-score{color:var(--gray-500)}
+.rc-desc{font-size:13px;color:var(--gray-400);line-height:1.55;margin-bottom:12px}
+.rc-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray-400);margin-bottom:4px}
+.rc-check .ck{color:var(--teal);font-weight:600}
+/* CTA button in chat */
+.cta-chat{max-width:480px;margin-left:48px}
+.cta-chat-btn{width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:12px;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background .25s;margin-bottom:6px}
+.cta-chat-btn:hover{background:var(--teal-bright)}
+.cta-chat-sub{font-size:11px;color:var(--gray-500);text-align:center}
+/* Footer */
+.foot{padding:16px 32px;border-top:1px solid var(--border);flex-shrink:0}
+.foot p{font-size:10.5px;color:var(--gray-600);line-height:1.5;max-width:640px;margin:0 auto}
+.foot a{color:var(--gray-500)}
+@media(max-width:700px){.hdr{padding:12px 16px}.chat-wrap{padding:20px 12px}.opts-wrap{margin-left:0}.result-card{margin-left:0}.cta-chat{margin-left:0}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-brand">Burlington Consult</div>
+      <div class="hdr-sep"></div>
+      <div class="hdr-title">Strategic Assessment</div>
+    </div>
+    <div class="hdr-badge">EB-1A + NIW Dual Pathway</div>
+  </div>
+
+  <div class="chat-wrap" id="chatWrap">
+    <div class="chat-inner" id="chat"></div>
+  </div>
+
+  <div class="foot">
+    <p>This engagement does not constitute the practice of law and does not establish an attorney-client relationship. Burlington Consult is not a law firm. By using this assessment, you agree to our <a href="https://www.burlingtonconsult.com/terms">Terms of Use</a>.</p>
+  </div>
+</div>
+
+<script>
+const questions=[
+  {type:'selection',advisor:"Welcome. I'm Burlington's assessment advisor. I'll walk you through a structured evaluation of your eligibility for both the Einstein Visa (EB-1A) and the National Interest Waiver (EB-2 NIW). Let's start with your professional background. What best describes your primary field?",options:[{text:'Science / Research',value:'Science/Research'},{text:'Engineering / Technology',value:'Engineering/Tech'},{text:'Medicine / Healthcare',value:'Medicine/Healthcare'},{text:'Business / Executive',value:'Business/Executive'},{text:'Arts / Creative / Entertainment',value:'Arts/Creative/Entertainment'},{text:'Law / Consulting',value:'Law/Consulting'},{text:'Entrepreneurship / Startups',value:'Entrepreneurship/Startups'},{text:'Finance',value:'Finance'},{text:'Education',value:'Education'},{text:'Other',value:'Other'}],key:'q1',scores:[0,0,0,0,0,0,0,0,0,0]},
+  {type:'selection',advisor:"Good. What is your highest level of education?",options:[{text:'No degree',value:'No degree'},{text:"Bachelor's",value:"Bachelor's"},{text:"Master's",value:"Master's"},{text:'PhD',value:'PhD'},{text:'MD/DO',value:'MD/DO'},{text:'JD',value:'JD'},{text:'MBA',value:'MBA'},{text:'Other advanced degree',value:'Other advanced'}],key:'q2',scores:[0,1,2,3,3,2,2,2]},
+  {type:'selection',advisor:"How many years of professional experience do you have in your field?",options:[{text:'0–2 years',value:'0-2'},{text:'3–5 years',value:'3-5'},{text:'6–10 years',value:'6-10'},{text:'11–20 years',value:'11-20'},{text:'20+ years',value:'20+'}],key:'q3',scores:[0,1,2,2,2]},
+  {type:'selection',advisor:"Now let's assess your evidence against the EB-1A criteria. Have you received nationally or internationally recognised prizes or awards for excellence in your field?",options:[{text:'None',value:'None'},{text:'Regional awards',value:'Regional'},{text:'National awards',value:'National'},{text:'International awards',value:'International'}],key:'q4',scores:[0,.66,1.33,2],c:'EB1A'},
+  {type:'selection',advisor:"Are you a member of any professional associations that require outstanding achievement for admission?",options:[{text:'No',value:'No'},{text:'One association',value:'One'},{text:'Multiple associations',value:'Multiple'}],key:'q5',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"Has there been major media coverage about you or your work in well-known publications?",options:[{text:'Never',value:'Never'},{text:'1–2 times',value:'1-2'},{text:'Multiple times in major outlets',value:'Multiple'}],key:'q6',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"Are you asked to judge or evaluate others' work on panels, committees, or for peer review?",options:[{text:'Never',value:'Never'},{text:'Occasionally',value:'Occasionally'},{text:'Regularly',value:'Regularly'}],key:'q7',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"Do you have original contributions with documented impact — patents, innovations, or widely cited research?",options:[{text:'No',value:'No'},{text:'Minor contributions',value:'Minor'},{text:'Yes, with documented impact',value:'Yes'}],key:'q8',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"Have you authored scholarly articles, books, or professional publications?",options:[{text:'None',value:'None'},{text:'1–3 with limited reach',value:'1-3'},{text:'Several widely cited',value:'Several'}],key:'q9',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"Have you held a senior or critical role at a distinguished organisation?",options:[{text:'No',value:'No'},{text:'Supporting role',value:'Supporting'},{text:'Senior or critical role',value:'Senior'}],key:'q11',scores:[0,1,2],c:'EB1A'},
+  {type:'selection',advisor:"How does your compensation compare to peers in your field in the relevant country?",options:[{text:'At or below peers',value:'No'},{text:'Somewhat above peers',value:'Somewhat'},{text:'Top 20%',value:'Top20'},{text:'Top 5%',value:'Top5'}],key:'q12',scores:[0,.66,1.33,2],c:'EB1A'},
+  {type:'selection',advisor:"Good — that covers the EB-1A criteria. Now let's evaluate the National Interest Waiver pathway. What is the primary impact of your work?",options:[{text:'Personal professional growth',value:'Personal'},{text:'Local community benefit',value:'Local'},{text:'National benefit',value:'National'},{text:'International benefit affecting the US',value:'International'}],key:'q14',scores:[8,16,25,33],c:'NIW'},
+  {type:'selection',advisor:"Does your work address a US priority area like healthcare, STEM, defence, clean energy, or education?",options:[{text:'Not particularly',value:'No'},{text:'Somewhat',value:'Somewhat'},{text:'Yes, directly aligned',value:'Yes'}],key:'q15',scores:[5,15,34],c:'NIW'},
+  {type:'selection',advisor:"Does your work address a documented national challenge?",options:[{text:'No',value:'No'},{text:'Indirectly',value:'Indirectly'},{text:'Yes, with documented evidence',value:'Yes'}],key:'q16',scores:[0,11,33],c:'NIW'},
+  {type:'selection',advisor:"What is your track record of measurable results?",options:[{text:'Just starting out',value:'Starting'},{text:'Some key milestones',value:'Some'},{text:'Strong documented record',value:'Strong'}],key:'q17',scores:[8,20,34],c:'NIW'},
+  {type:'selection',advisor:"Do you have institutional or organisational support for your work?",options:[{text:'None',value:'None'},{text:'Some informal support',value:'Informal'},{text:'Strong formal support with letters',value:'Strong'}],key:'q18',scores:[0,11,34],c:'NIW'},
+  {type:'selection',advisor:"How unique or specialised is your role?",options:[{text:'Easily replaceable',value:'Easily'},{text:'Somewhat specialised',value:'Specialised'},{text:'Highly unique',value:'Unique'}],key:'q19',scores:[5,19,33],c:'NIW'},
+  {type:'selection',advisor:"Finally — how feasible would employer sponsorship be if needed?",options:[{text:'Easily feasible',value:'Easy'},{text:'Complicated',value:'Complicated'},{text:'Not feasible',value:'Not'}],key:'q20',scores:[0,16,33],c:'NIW'}
+];
+
+const wt={q4:1.3,q5:1,q6:1.2,q7:1,q8:1.4,q9:1.2,q11:1.1,q12:1};
+let cur=0,ans={},prof=null;
+const chat=document.getElementById('chat');
+
+function delay(){return Math.random()*600+1200}
+
+function addMsg(text,isAdv,opts){
+  const d=document.createElement('div');d.className='msg'+(isAdv?'':' user');
+  const av=document.createElement('div');av.className='avatar';av.textContent=isAdv?'BC':'You';
+  const bub=document.createElement('div');bub.className='bubble';bub.innerHTML=text;
+  d.appendChild(av);d.appendChild(bub);chat.appendChild(d);
+  if(opts){
+    const ow=document.createElement('div');ow.className='opts-wrap';ow.id='opts-'+cur;
+    opts.forEach(o=>{
+      const b=document.createElement('button');b.className='opt-btn';b.textContent=o.text;
+      b.onclick=()=>pick(o.value,o.text,ow);
+      ow.appendChild(b);
+    });
+    chat.appendChild(ow);
+  }
+  scrollBottom();
+}
+
+function addTyping(){
+  const d=document.createElement('div');d.className='msg';d.id='typing';
+  const av=document.createElement('div');av.className='avatar';av.textContent='BC';
+  const t=document.createElement('div');t.className='typing';
+  for(let i=0;i<3;i++){const dot=document.createElement('div');dot.className='typing-dot';t.appendChild(dot);}
+  d.appendChild(av);d.appendChild(t);chat.appendChild(d);scrollBottom();
+}
+
+function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+
+function scrollBottom(){document.getElementById('chatWrap').scrollTop=document.getElementById('chatWrap').scrollHeight;}
+
+function pick(val,text,wrap){
+  const q=questions[cur];
+  ans[q.key]={value:val,text,score:q.scores[q.options.findIndex(o=>o.value===val)]};
+  if(q.key==='q1')prof=text;
+  wrap.querySelectorAll('.opt-btn').forEach(b=>{b.classList.toggle('chosen',b.textContent===text);});
+  wrap.classList.add('done');
+  addMsg(text,false);
+  cur++;
+  if(cur<questions.length){
+    setTimeout(()=>{
+      addTyping();
+      setTimeout(()=>{
+        removeTyping();
+        const nq=questions[cur];
+        addMsg(nq.advisor,true,nq.options);
+        if(cur===Math.ceil(questions.length/2)){
+          setTimeout(()=>{addTyping();setTimeout(()=>{removeTyping();addMsg("You're doing well. I'm already seeing some real strengths in your profile. Let's keep going.",true);},delay());},300);}
+      },delay());
+    },300);
+  }else{
+    setTimeout(()=>{addTyping();setTimeout(()=>{removeTyping();calcResults();},delay());},500);
+  }
+}
+
+function calcResults(){
+  let eb=0,nw=0;
+  ['q4','q5','q6','q7','q8','q9','q11','q12'].forEach(q=>{if(ans[q])eb+=ans[q].score*(wt[q]||1);});
+  eb=Math.min(100,Math.round(eb*3.8));
+  ['q14','q15','q16','q17','q18','q19','q20'].forEach(q=>{if(ans[q])nw+=ans[q].score;});
+  nw=Math.min(100,nw);
+  showResults(eb,nw);
+}
+
+function showResults(eb,nw){
+  const ebS=eb>=80,ebE=eb>=60,nwS=nw>=80,nwE=nw>=60;
+  addMsg("Based on everything you've told me, here is my assessment:",true);
+  setTimeout(()=>{
+    chat.appendChild(makeCard('Einstein Visa (EB-1A)',eb,ebE,ebS));
+    chat.appendChild(makeCard('National Interest Waiver (EB-2 NIW)',nw,nwE,nwS));
+    scrollBottom();
+    setTimeout(()=>{
+      addTyping();
+      setTimeout(()=>{
+        removeTyping();
+        if(ebS||nwS){
+          addMsg("Your profile shows genuine strength. I'd recommend proceeding to a structured Profile Assessment — reviewed by Burlington's case architects, not an algorithm. That's the step that turns this self-assessment into a real strategic opinion.",true);
+        }else{
+          addMsg("Based on your assessment, I recommend we take this further with a structured Profile Assessment. Burlington's team will review your full record and identify the strongest available pathway — or advise on strategic development if now isn't the right time to file.",true);
+        }
+        setTimeout(()=>{
+          const cta=document.createElement('div');cta.className='cta-chat';
+          cta.innerHTML='<button class="cta-chat-btn" onclick="goToAssessment()">Submit Profile Assessment · $75 →</button><div class="cta-chat-sub">Credited in full toward your $150 consultation. Consultation credited toward engagement.</div>';
+          chat.appendChild(cta);scrollBottom();
+        },600);
+      },delay());
+    },400);
+  },500);
+}
+
+function makeCard(title,score,elig,strong){
+  const d=document.createElement('div');
+  d.className='result-card '+(strong?'rc-strong':elig?'rc-elig':'rc-weak');
+  let st='Further development needed',desc='Strategic development recommended.',crit='';
+  if(strong){st='Strong fit for petition';desc=title.includes('EB-1A')?'Your profile demonstrates the extraordinary ability threshold. A petition strategy can be developed immediately.':'You meet the three-prong national interest test. Petition strategy recommended.';crit=title.includes('EB-1A')?'<div class="rc-check"><span class="ck">✓</span> Strong evidence across multiple criteria</div><div class="rc-check"><span class="ck">✓</span> Ready for formal petition preparation</div>':'<div class="rc-check"><span class="ck">✓</span> All three Dhanasar prongs satisfied</div><div class="rc-check"><span class="ck">✓</span> Strong institutional support indicated</div>';}
+  else if(elig){st='Eligible for petition';desc=title.includes('EB-1A')?'You meet the threshold. Focus on strengthening documentation.':'You satisfy the national interest pathway. Strategy refinement recommended.';crit=title.includes('EB-1A')?'<div class="rc-check"><span class="ck">✓</span> Minimum criteria satisfied</div>':'<div class="rc-check"><span class="ck">✓</span> Core requirements met</div>';}
+  d.innerHTML='<div class="rc-header">'+title+'</div><div class="rc-body"><div class="rc-status">'+st+'</div><div class="rc-score">'+score+'</div><div class="rc-desc">'+desc+'</div>'+crit+'</div>';
+  return d;
+}
+
+function goToAssessment(){
+  alert('In production, this redirects to burlingtonconsult.com/assessment — the $75 Profile Assessment form.');
+}
+
+setTimeout(()=>{addMsg(questions[0].advisor,true,questions[0].options);},600);
+</script>
+</body>
+</html>
